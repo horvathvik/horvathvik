@@ -146,3 +146,6 @@ evaluate_model(model, ['above 24 ppm', 'in between', 'under 2.4 ppm'], x_test, y
                EVAL_TXT_PATH, MODEL_NAME, FIGURE_EVAL_PATH)
 
 plt.show()
+
+
+#teszt komment

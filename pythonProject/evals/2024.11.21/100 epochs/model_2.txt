@@ -1,0 +1,38 @@
+Classes: 0 - above 24 ppm	1 - in between	2 - under 2.4 ppm	
+Correct Predictions: 20/30
+Class 0 - Predicted: 10/10
+Class 1 - Predicted: 0/10
+Class 2 - Predicted: 10/10
+Confident predictions (confidence over 90%): 22
+Predictions with confidence under 50%: 0
+Class	Prediction	Confidence
+  0  	    0     	  0.990   
+  1  	    0     	  0.962   
+  1  	    0     	  0.870   
+  2  	    2     	  0.999   
+  1  	    0     	  0.942   
+  2  	    2     	  0.996   
+  0  	    0     	  0.992   
+  1  	    0     	  0.883   
+  1  	    0     	  0.814   
+  0  	    0     	  0.990   
+  0  	    0     	  0.990   
+  0  	    0     	  0.992   
+  0  	    0     	  0.992   
+  0  	    0     	  0.983   
+  1  	    0     	  0.831   
+  2  	    2     	  0.982   
+  2  	    2     	  0.995   
+  1  	    0     	  0.863   
+  0  	    0     	  0.990   
+  0  	    0     	  0.987   
+  1  	    0     	  0.876   
+  2  	    2     	  0.998   
+  2  	    2     	  0.997   
+  2  	    2     	  0.988   
+  0  	    0     	  0.992   
+  2  	    2     	  0.995   
+  2  	    2     	  0.989   
+  2  	    2     	  0.874   
+  1  	    0     	  0.902   
+  1  	    0     	  0.821   

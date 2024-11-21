@@ -15,7 +15,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 from scipy.interpolate import CubicSpline as CubicSpline
 
-from pythonProject.global_vars import FULL_DB_PATH, FIGURE_DB_PATH, TRAIN_DB_PATH, TRAIN_DB_NAME
+from global_vars import FULL_DB_PATH, FIGURE_DB_PATH, TRAIN_DB_PATH, TRAIN_DB_NAME
 from spectra.Spectrum import RamanSpectrum as RamanSpectrum
 
 
@@ -65,23 +65,31 @@ def create_RamanSpectrum(get_data = False, path=None, db_name=None, index = None
 
 #Get the data used for training and testing - any restrictions are considered before building the db
 thiram_1000uM = dbhandlerleg.select_from_KTNLdb(FULL_DB_PATH, 'sers-KTNL_v2', 'RamanSpectra',
-                                         ['xData', 'yData'], analyte='thiram', concentration=1)
+                                         ['xData', 'yData'], analyte='thiram', concentration=1, substrateID=102)
+
 thiram_100uM = dbhandlerleg.select_from_KTNLdb(FULL_DB_PATH, 'sers-KTNL_v2', 'RamanSpectra',
-                                         ['xData', 'yData'], analyte='thiram', concentration=0.1)
+                                         ['xData', 'yData'], analyte='thiram', concentration=0.1, substrateID=102)
+
 thiram_10uM = dbhandlerleg.select_from_KTNLdb(FULL_DB_PATH, 'sers-KTNL_v2', 'RamanSpectra',
-                                         ['xData', 'yData'], analyte='thiram', concentration=0.01)
-thiram_1uM = dbhandlerleg.select_from_KTNLdb(FULL_DB_PATH, 'sers-KTNL_v2', 'RamanSpectra',
-                                         ['xData', 'yData'], analyte='thiram', concentration=0.001)
+                                         ['xData', 'yData'], analyte='thiram', concentration=0.01, substrateID=102)
+
 none_all = dbhandlerleg.select_from_KTNLdb(FULL_DB_PATH, 'sers-KTNL_v2', 'RamanSpectra',
                                          ['xData', 'yData'], analyte='none', substrateID=102)
+
 water_all = dbhandlerleg.select_from_KTNLdb(FULL_DB_PATH, 'sers-KTNL_v2', 'RamanSpectra',
                                          ['xData', 'yData'], analyte='water', substrateID=102)
+
+#these are for checkking the time between the susbtrate fabrication and the raman measurements
+date_substrate = dbhandlerleg.select_from_KTNLdb(FULL_DB_PATH,'sers-KTNL_v2','substrates',
+                                                 ['date'], substrateID=102)
+dates = dbhandlerleg.select_from_KTNLdb(FULL_DB_PATH,'sers-KTNL_v2','RamanSpectra',
+                                        ['date'], analyte='water', substrateID=102)
+
 
 #Randomize order of the categories
 random.shuffle(thiram_1000uM)
 random.shuffle(thiram_100uM)
 random.shuffle(thiram_10uM)
-random.shuffle(thiram_1uM)
 random.shuffle(none_all)
 random.shuffle(water_all)
 
@@ -89,7 +97,8 @@ print(len(thiram_1000uM))
 print(type(thiram_1000uM))
 print(len(thiram_100uM))
 print(len(thiram_10uM))
-print(len(thiram_1uM))
+print(len(none_all))
+print(len(water_all))
 
 
 #Apply pre-processing and assign labels
@@ -99,10 +108,13 @@ labels = []
 spectrum_size = len(thiram_1000uM[-1]['xData']) #size for resampling
 
 
+
 #Label 2
-for i in range(154):
+for i in range(50):
     thiram_spectrum = create_RamanSpectrum(xData=thiram_1000uM[i]['xData'], yData=thiram_1000uM[i]['yData'])
     thiram_spectrum.scaleMinMax(0,1)
+    thiram_spectrum.crop(200,2500)
+    spectrum_size = len(thiram_spectrum.xData) #ezt lehetne a cikluson kívül, hogy biztos egyenlő legyen mindig
     thiram_spectrum.resample(np.linspace(thiram_spectrum.xData[0], thiram_spectrum.xData[-1], spectrum_size))
     create_figure(thiram_spectrum.xData, thiram_spectrum.yData, FIGURE_DB_PATH+'/label2',str(i+1))
     data_x.append(thiram_spectrum.xData)
@@ -110,43 +122,39 @@ for i in range(154):
     labels.append(2)
 
 #Label 1
-for i in range(77):
+for i in range(50):
     thiram_spectrum = create_RamanSpectrum(xData=thiram_100uM[i]['xData'], yData=thiram_100uM[i]['yData'])
     thiram_spectrum.scaleMinMax(0,1)
+    thiram_spectrum.crop(200,2500)
     thiram_spectrum.resample(np.linspace(thiram_spectrum.xData[0], thiram_spectrum.xData[-1], spectrum_size))
     create_figure(thiram_spectrum.xData, thiram_spectrum.yData, FIGURE_DB_PATH+'/label1', '24ppm'+str(i + 1))
     data_x.append(thiram_spectrum.xData)
     data_y.append(thiram_spectrum.yData)
     labels.append(1)
-for i in range(77):
-    thiram_spectrum = create_RamanSpectrum(xData=thiram_10uM[i]['xData'], yData=thiram_10uM[i]['yData'])
-    thiram_spectrum.scaleMinMax(0,1)
-    thiram_spectrum.resample(np.linspace(thiram_spectrum.xData[0], thiram_spectrum.xData[-1], spectrum_size))
-    create_figure(thiram_spectrum.xData, thiram_spectrum.yData, FIGURE_DB_PATH+'/label1', '2.4ppm'+str(i + 1))
-    data_x.append(thiram_spectrum.xData)
-    data_y.append(thiram_spectrum.yData)
-    labels.append(1)
 
 #Label 0
-for i in range(77):
-    thiram_spectrum = create_RamanSpectrum(xData=thiram_1uM[i]['xData'], yData=thiram_1uM[i]['yData'])
+for i in range(15):
+    thiram_spectrum = create_RamanSpectrum(xData=thiram_10uM[i]['xData'], yData=thiram_10uM[i]['yData'])
     thiram_spectrum.scaleMinMax(0,1)
+    thiram_spectrum.crop(200,2500)
     thiram_spectrum.resample(np.linspace(thiram_spectrum.xData[0], thiram_spectrum.xData[-1], spectrum_size))
-    create_figure(thiram_spectrum.xData, thiram_spectrum.yData, FIGURE_DB_PATH+'/label0', '0.24ppm'+str(i + 1))
+    create_figure(thiram_spectrum.xData, thiram_spectrum.yData, FIGURE_DB_PATH+'/label0', '2.4ppm'+str(i + 1))
     data_x.append(thiram_spectrum.xData)
     data_y.append(thiram_spectrum.yData)
     labels.append(0)
-for i in range(39):
+for i in range(20):
     none_spectrum = create_RamanSpectrum(xData=none_all[i]['xData'], yData=none_all[i]['yData'])
     none_spectrum.scaleMinMax(0, 1)
+    none_spectrum.crop(200,2500)
     none_spectrum.resample(np.linspace(none_spectrum.xData[0], none_spectrum.xData[-1], spectrum_size))
     create_figure(none_spectrum.xData, none_spectrum.yData, FIGURE_DB_PATH+'/label0', 'none'+str(i + 1))
     data_x.append(none_spectrum.xData)
     data_y.append(none_spectrum.yData)
     labels.append(0)
-for i in range(38):
+for i in range(15):
     water_spectrum = create_RamanSpectrum(xData=water_all[i]['xData'], yData=water_all[i]['yData'])
     water_spectrum.scaleMinMax(0, 1)
+    water_spectrum.crop(200,2500)
     water_spectrum.resample(np.linspace(water_spectrum.xData[0], water_spectrum.xData[-1], spectrum_size))
     create_figure(water_spectrum.xData, water_spectrum.yData, FIGURE_DB_PATH+'/label0', 'water'+str(i + 1))
     data_x.append(water_spectrum.xData)

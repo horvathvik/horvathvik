@@ -4,7 +4,7 @@ import tensorflow as tf
 import numpy as np
 import matplotlib.pyplot as plt
 
-from pythonProject.global_vars import MODEL_PATH, MODEL_NAME, TEST_DB_PATH, TEST_DB_NAME, TRAIN_DB_PATH, TRAIN_DB_NAME, \
+from global_vars import MODEL_PATH, MODEL_NAME, TEST_DB_PATH, TEST_DB_NAME, TRAIN_DB_PATH, TRAIN_DB_NAME, \
     EVAL_TXT_PATH, FIGURE_EVAL_PATH
 
 
@@ -126,9 +126,11 @@ def write_result(file_path):
 model = tf.keras.models.load_model(MODEL_PATH+"/"+MODEL_NAME+".keras")
 model_summary = model.summary()
 
+raman_shifts = dbhandler.convert_array(dbhandler.select_all(TRAIN_DB_PATH,TRAIN_DB_NAME,"spectra")[0][1])
+
 res = dbhandler.select_all(TEST_DB_PATH,TEST_DB_NAME,'spectra')
 index_test = np.zeros(len(res))
-x_test = np.zeros(shape=(len(res),1044))
+x_test = np.zeros(shape=(len(res),len(raman_shifts)))
 y_test = np.zeros(len(res))
 
 for i in range(len(res)):
@@ -136,13 +138,12 @@ for i in range(len(res)):
     x_test[i,:] = dbhandler.convert_array(res[i][1])
     y_test[i] = res[i][2]
 
-raman_shifts = dbhandler.convert_array(dbhandler.select_all(TRAIN_DB_PATH,TRAIN_DB_NAME,"spectra")[0][1])
 
 #Make predictions
 predictions = model.predict(x_test)
 loss, acc = model.evaluate(x_test, y_test, verbose=0)
 
-evaluate_model(model, ['above 24 ppm', 'in between', 'under 2.4 ppm'], x_test, y_test, raman_shifts,
+evaluate_model(model, ['under 24 ppm', 'in between', 'above 24 ppm'], x_test, y_test, raman_shifts,
                EVAL_TXT_PATH, MODEL_NAME, FIGURE_EVAL_PATH)
 
 plt.show()

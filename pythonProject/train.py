@@ -14,7 +14,7 @@ import matplotlib.pyplot as plt
 import iosum.dbhandler as dbhandler
 import os
 
-from pythonProject.global_vars import TRAIN_DB_PATH, TRAIN_DB_NAME, FIGURE_MODEL_HIST_PATH, MODEL_NAME, MODEL_PATH, \
+from global_vars import TRAIN_DB_PATH, TRAIN_DB_NAME, FIGURE_MODEL_HIST_PATH, MODEL_NAME, MODEL_PATH, \
     TEST_DB_PATH, TEST_DB_NAME
 
 
@@ -47,6 +47,8 @@ def train_easyCID(x_train, y_train, x_test, y_test, batch_size, epochs, optimize
     callback = [tf.keras.callbacks.EarlyStopping(monitor='val_loss',
                                                  min_delta=0.0001, patience=20, verbose=0, mode='auto',
                                                  baseline=None, restore_best_weights=True)]
+    #quick removal of callback
+    callback = []
     history = model.fit(x_train, y_train, batch_size=batch_size, epochs=epochs,
                         validation_split=0.1, verbose=0, callbacks=callback)
     if len(x_test) > 0 and len(y_test) > 0:
@@ -192,7 +194,7 @@ index_train, x_train, y_train, index_test, x_test, y_test = read_dataset_multicl
 
 
 # Create and train model
-epochs = 500
+epochs = 150
 batch_size = 100
 w_len = 50
 dw = int(w_len / 2)

@@ -112,8 +112,8 @@ spectrum_size = len(thiram_1000uM[-1]['xData']) #size for resampling
 #Label 2
 for i in range(50):
     thiram_spectrum = create_RamanSpectrum(xData=thiram_1000uM[i]['xData'], yData=thiram_1000uM[i]['yData'])
-    thiram_spectrum.scaleMinMax(0,1)
-    thiram_spectrum.crop(200,2500)
+    thiram_spectrum.crop(300, 3000)
+    #thiram_spectrum.normalize_area()
     spectrum_size = len(thiram_spectrum.xData) #ezt lehetne a cikluson kívül, hogy biztos egyenlő legyen mindig
     thiram_spectrum.resample(np.linspace(thiram_spectrum.xData[0], thiram_spectrum.xData[-1], spectrum_size))
     create_figure(thiram_spectrum.xData, thiram_spectrum.yData, FIGURE_DB_PATH+'/label2',str(i+1))
@@ -124,8 +124,8 @@ for i in range(50):
 #Label 1
 for i in range(50):
     thiram_spectrum = create_RamanSpectrum(xData=thiram_100uM[i]['xData'], yData=thiram_100uM[i]['yData'])
-    thiram_spectrum.scaleMinMax(0,1)
-    thiram_spectrum.crop(200,2500)
+    thiram_spectrum.crop(300, 3000)
+    #thiram_spectrum.normalize_area()
     thiram_spectrum.resample(np.linspace(thiram_spectrum.xData[0], thiram_spectrum.xData[-1], spectrum_size))
     create_figure(thiram_spectrum.xData, thiram_spectrum.yData, FIGURE_DB_PATH+'/label1', '24ppm'+str(i + 1))
     data_x.append(thiram_spectrum.xData)
@@ -135,8 +135,8 @@ for i in range(50):
 #Label 0
 for i in range(15):
     thiram_spectrum = create_RamanSpectrum(xData=thiram_10uM[i]['xData'], yData=thiram_10uM[i]['yData'])
-    thiram_spectrum.scaleMinMax(0,1)
-    thiram_spectrum.crop(200,2500)
+    thiram_spectrum.crop(300, 3000)
+    #thiram_spectrum.normalize_area()
     thiram_spectrum.resample(np.linspace(thiram_spectrum.xData[0], thiram_spectrum.xData[-1], spectrum_size))
     create_figure(thiram_spectrum.xData, thiram_spectrum.yData, FIGURE_DB_PATH+'/label0', '2.4ppm'+str(i + 1))
     data_x.append(thiram_spectrum.xData)
@@ -144,8 +144,8 @@ for i in range(15):
     labels.append(0)
 for i in range(20):
     none_spectrum = create_RamanSpectrum(xData=none_all[i]['xData'], yData=none_all[i]['yData'])
-    none_spectrum.scaleMinMax(0, 1)
-    none_spectrum.crop(200,2500)
+    none_spectrum.crop(300, 3000)
+    #none_spectrum.normalize_area()
     none_spectrum.resample(np.linspace(none_spectrum.xData[0], none_spectrum.xData[-1], spectrum_size))
     create_figure(none_spectrum.xData, none_spectrum.yData, FIGURE_DB_PATH+'/label0', 'none'+str(i + 1))
     data_x.append(none_spectrum.xData)
@@ -153,8 +153,8 @@ for i in range(20):
     labels.append(0)
 for i in range(15):
     water_spectrum = create_RamanSpectrum(xData=water_all[i]['xData'], yData=water_all[i]['yData'])
-    water_spectrum.scaleMinMax(0, 1)
-    water_spectrum.crop(200,2500)
+    water_spectrum.crop(300, 3000)
+    #water_spectrum.normalize_area()
     water_spectrum.resample(np.linspace(water_spectrum.xData[0], water_spectrum.xData[-1], spectrum_size))
     create_figure(water_spectrum.xData, water_spectrum.yData, FIGURE_DB_PATH+'/label0', 'water'+str(i + 1))
     data_x.append(water_spectrum.xData)

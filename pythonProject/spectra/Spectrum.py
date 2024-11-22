@@ -145,6 +145,16 @@ class Spectrum:
                       (maxValue - minValue))
         return self
 
+    def normalize_area(self):
+        """
+        Normalizes the spectrum so that the area under the curve equals to 1.
+        :return: Spectrum
+        """
+        area = scipy.integrate.simpson(np.abs(self.yData), x=self.xData)
+        self.yData = self.yData/area
+
+        return self
+
     def shift(self, axis, value):
         """
         Shifts the data on a given axis with a given value

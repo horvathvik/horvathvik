@@ -194,7 +194,7 @@ index_train, x_train, y_train, index_test, x_test, y_test = read_dataset_multicl
 
 
 # Create and train model
-epochs = 150
+epochs = 200
 batch_size = 100
 w_len = 50
 dw = int(w_len / 2)
